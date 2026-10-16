@@ -1,4 +1,5 @@
 import csv
+import pandas as pd
 
 import io_utils
 
@@ -46,3 +47,31 @@ def calc_revenue_by_month():
         revenue_by_month[month] = round(revenue, 2) # vi såg ut att få floating point errors, jag avrundar bort dem
 
     return revenue_by_month
+
+
+def calculate_revenue(df, column, value):
+    return df.loc[df[column] == value, "revenue"].sum()
+
+
+def get_revenue_by_group(df, column):
+    values = df[column].dropna().unique()
+
+    return pd.DataFrame([
+        {
+            column: value,
+            "total_revenue": calculate_revenue(df, column, value)
+        }
+        for value in values
+    ])
+
+
+def get_top_3_cities(df):
+    return get_revenue_by_group(df, "city").sort_values(
+        "total_revenue", ascending=False
+    ).head(3)
+
+
+def get_top_3_categories(df):
+    return get_revenue_by_group(df, "category").sort_values(
+        "total_revenue", ascending=False
+    ).head(3)
