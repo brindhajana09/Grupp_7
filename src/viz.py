@@ -1,9 +1,24 @@
-import pandas as pd
 import matplotlib.pyplot as plt
+import pandas as pd
 
+from ecommerce import CategorySales
+
+
+def plot_revenue_by_category_over_time(categories: list[CategorySales]):
+    x = ["Jan", "Feb", "Mar", "Apr", "Maj", "Jun"]
+    for category in categories:
+        y = [category.january_revenue, category.february_revenue,
+             category.march_revenue, category.april_revenue,
+             category.may_revenue, category.june_revenue]
+        plt.plot(x, y, label = category.category_name)
+    plt.title("Revenue by Month")
+    plt.xlabel("2024")
+    plt.ylabel("Revenue")
+    plt.legend()
+    plt.show()
 
 def plot_revenue_by_category(
-    df,
+    df: pd.DataFrame,
     category_column,
     revenue_column="revenue",
     title=None
@@ -53,3 +68,16 @@ def plot_revenue_over_time(df):
     plt.show()
 
     return ax
+
+def plot_units_sold_by_category_over_time(categories: list[CategorySales]):
+    x = ["Jan", "Feb", "Mar", "Apr", "Maj", "Jun"]
+    for category in categories:
+        y = [category.january_units_sold, category.february_units_sold,
+             category.march_units_sold, category.april_units_sold,
+             category.may_units_sold, category.june_units_sold]
+        plt.plot(x, y, label = category.category_name)
+    plt.title("Units Sold by Month")
+    plt.xlabel("2024")
+    plt.ylabel("Units Sold")
+    plt.legend()
+    plt.show()

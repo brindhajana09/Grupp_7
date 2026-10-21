@@ -1,10 +1,12 @@
 import csv
+
 import pandas as pd
 
 import io_utils
+from ecommerce import CategorySales
 
 
-def calc_sales_by_month():
+def calc_total_sales_by_month():
     sales_by_month = {
         "Januari": 0,
         "Februari": 0,
@@ -14,34 +16,32 @@ def calc_sales_by_month():
         "Juni": 0,  # finns ingen data i ecommerce_sales för månader efter Juni
     }
 
-    with open("data/ecommerce_sales.csv", encoding="utf-8") as data:
-        reader = csv.reader(data)
-        next(reader)
+    with open("../data/ecommerce_sales.csv", encoding="utf-8") as data:
+        reader = csv.DictReader(data)
         for row in reader:
             month = io_utils.convert_number_to_month(int(
-                row[1].split("-")[1].lstrip("0")))
-            sales_by_month[month] += int(row[5])
+                row["date"].split("-")[1].lstrip("0")))
+            sales_by_month[month] += int(row["units"])
 
     return sales_by_month
 
 
-def calc_revenue_by_month():
+def calc_total_revenue_by_month():
     revenue_by_month = {
-        "Januari": 0,
-        "Februari": 0,
-        "Mars": 0,
-        "April": 0,
-        "Maj": 0,
-        "Juni": 0,  # finns ingen data i ecommerce_sales för månader efter Juni
+        "Januari": 0.0,
+        "Februari": 0.0,
+        "Mars": 0.0,
+        "April": 0.0,
+        "Maj": 0.0,
+        "Juni": 0.0,  # finns ingen data i ecommerce_sales för månader efter Juni
     }
 
-    with open("data/ecommerce_sales.csv", encoding="utf-8") as data:
-        reader = csv.reader(data)
-        next(reader)
+    with open("../data/ecommerce_sales.csv", encoding="utf-8") as data:
+        reader = csv.DictReader(data)
         for row in reader:
             month = io_utils.convert_number_to_month(int(
-                row[1].split("-")[1].lstrip("0")))
-            revenue_by_month[month] += float(row[6])
+                row["date"].split("-")[1].lstrip("0")))
+            revenue_by_month[month] += float(row["revenue"])
 
     for month, revenue in revenue_by_month.items(): 
         revenue_by_month[month] = round(revenue, 2) # vi såg ut att få floating point errors, jag avrundar bort dem
@@ -49,11 +49,28 @@ def calc_revenue_by_month():
     return revenue_by_month
 
 
-def calculate_revenue(df, column, value):
+def calculate_sales_by_category_over_time():
+    category_dict: dict[str, CategorySales] = {}
+
+    with open("../data/ecommerce_sales.csv", encoding="utf-8") as data:
+        reader = csv.DictReader(data)
+        for row in reader:
+            category = row["category"]
+            if category not in category_dict:
+                category_dict[category] = CategorySales(category)
+            category_dict[category].add_entry(
+                row["date"], int(row["units"]), float(row["revenue"]))
+
+    category_list = list(category_dict.values())
+
+    return category_list
+
+
+def calculate_revenue(df: pd.DataFrame, column, value):
     return df.loc[df[column] == value, "revenue"].sum()
 
 
-def get_revenue_by_group(df, column):
+def get_revenue_by_group(df: pd.DataFrame, column):
     values = df[column].dropna().unique()
 
     return pd.DataFrame([
