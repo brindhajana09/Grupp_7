@@ -45,3 +45,8 @@ class CategorySales:
 class CitySales:
     city_name: str
     category_sales: dict[str, CategorySales] = field(default_factory = dict)
+
+    def add_entry(self, category: str, date: str, units: int, revenue: float):
+        if category not in self.category_sales:
+            self.category_sales[category] = CategorySales(category)
+        self.category_sales[category].add_entry(date, units, revenue)
