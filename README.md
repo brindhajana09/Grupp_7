@@ -17,3 +17,6 @@ Använd "Run All" i sales_analysis.ipynb
 - Funktioner för att visa försäljning per kategori över tid -Mattias
 - Funktioner för att beräkna total försäljning över tid -Mattias
 - Funktioner för att beräkna AOV och visualisering av AOV per stad och kategori -Mattias
+- Funktioner för att Visualisera intäkter för kategori, Stad och intäkter över tid - Brindha
+- Funktioner för att Beräkna intäkter per stad - Brindha
+- Funktioner för att Beräkna intäkt per kategori - Brindha
