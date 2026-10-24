@@ -10,7 +10,7 @@ def calculate_aov(df: pd.DataFrame) -> float:
     return round(df["revenue"].sum() / len(df.index), 2)
     
 
-def calculate_aov_by_month():
+def calculate_aov_by_month(df: pd.DataFrame):
     aov_by_month = {
         "January": 0.0,
         "February": 0.0,
@@ -19,8 +19,8 @@ def calculate_aov_by_month():
         "May": 0.0,
         "June": 0.0,
     }
-    monthly_orders = number_of_orders_by_month()
-    monthly_revenue = calc_total_revenue_by_month()
+    monthly_orders = number_of_orders_by_month(df)
+    monthly_revenue = calc_total_revenue_by_month(df)
     for month in monthly_revenue:
         aov_by_month[month] = round(
             monthly_revenue[month] / monthly_orders[month], 2)
@@ -32,27 +32,15 @@ def calc_total_revenue(df: pd.DataFrame) -> float:
     return round(df["revenue"].sum(), 2)
 
 
-def calc_total_revenue_by_month():
-    revenue_by_month = {
-        "January": 0.0,
-        "February": 0.0,
-        "March": 0.0,
-        "April": 0.0,
-        "May": 0.0,
-        "June": 0.0,  # finns ingen data i ecommerce_sales för månader efter Juni
-    }
+def calc_total_revenue_by_month(df: pd.DataFrame):
+    revenue_by_month: dict[str, float] = {}
 
-    with open("../data/ecommerce_sales.csv", encoding="utf-8") as data:
-        reader = csv.DictReader(data)
-        for row in reader:
-            month = io_utils.convert_number_to_month(
-                int(row["date"].split("-")[1].lstrip("0")))
-            revenue_by_month[month] += float(row["revenue"])
+    revenues = df.groupby(df.date.dt.month)["revenue"].sum().round(2)
 
-    return {
-        month: round(float(revenue), 2) # avrundar bort floating point errors
-        for month, revenue in revenue_by_month.items()
-    }
+    for index, revenue in enumerate(revenues):
+        revenue_by_month[io_utils.convert_number_to_month(index + 1)] = revenue
+
+    return revenue_by_month
 
 
 def calculate_revenue(df: pd.DataFrame, column: str, value):
@@ -79,7 +67,7 @@ def get_sales_by_category(df: pd.DataFrame):
 
         for i, row in df.loc[df["category"] == category].iterrows():
             category_dict[row["category"]].add_entry(
-                row["date"], int(row["units"]), float(row["revenue"]))
+                str(row["date"]), int(row["units"]), float(row["revenue"]))
 
     return list(category_dict.values())
 
@@ -93,7 +81,7 @@ def get_sales_by_city(df: pd.DataFrame):
         for i, row in df.loc[df["city"] == city].iterrows():
             city_sales[city].add_entry(
                 row["category"],
-                row["date"],
+                str(row["date"]),
                 int(row["units"]),
                 float(row["revenue"])
             )
@@ -113,21 +101,11 @@ def get_top_3_categories(df):
     ).head(3)
 
 
-def number_of_orders_by_month():
-    orders_by_month = {
-        "January": 0,
-        "February": 0,
-        "March": 0,
-        "April": 0,
-        "May": 0,
-        "June": 0,
-    }
+def number_of_orders_by_month(df: pd.DataFrame):
+    orders_by_month: dict[str, int] = {}
 
-    with open("../data/ecommerce_sales.csv", encoding="utf-8") as data:
-        reader = csv.DictReader(data)
-        for row in reader:
-            month = io_utils.convert_number_to_month(int(
-                    row["date"].split("-")[1].lstrip("0")))
-            orders_by_month[month] += 1
+    months = df.groupby([df.date.dt.month]).size()
+    for index, amount in enumerate(months):
+        orders_by_month[io_utils.convert_number_to_month(index + 1)] = amount
 
     return orders_by_month
