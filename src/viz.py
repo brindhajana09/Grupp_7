@@ -23,7 +23,7 @@ def plot_aov_by_city_and_category(city_sales: list[CitySales]):
     plt.show()
 
 def plot_revenue_by_category_over_time(categories: list[CategorySales]):
-    x = ["Jan", "Feb", "Mar", "Apr", "Maj", "Jun"]
+    x = ["Jan", "Feb", "Mar", "Apr", "May", "Jun"]
     for category in categories:
         y = [category.january_revenue, category.february_revenue,
              category.march_revenue, category.april_revenue,
@@ -89,7 +89,7 @@ def plot_revenue_over_time(df):
 
 
 def plot_units_sold_by_category_over_time(categories: list[CategorySales]):
-    x = ["Jan", "Feb", "Mar", "Apr", "Maj", "Jun"]
+    x = ["Jan", "Feb", "Mar", "Apr", "May", "Jun"]
     for category in categories:
         y = [category.january_units_sold, category.february_units_sold,
              category.march_units_sold, category.april_units_sold,
