@@ -9,14 +9,7 @@ def calculate_aov(df: pd.DataFrame) -> float:
     
 
 def calculate_aov_by_month(df: pd.DataFrame):
-    aov_by_month = {
-        "January": 0.0,
-        "February": 0.0,
-        "March": 0.0,
-        "April": 0.0,
-        "May": 0.0,
-        "June": 0.0,
-    }
+    aov_by_month: dict[str, float] = {}
     monthly_orders = number_of_orders_by_month(df)
     monthly_revenue = calc_total_revenue_by_month(df)
     for month in monthly_revenue:
