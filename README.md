@@ -4,11 +4,11 @@
 
 
 ### Instruktioner
-Python 3.14.7
-Skapa ett .venv för projektet
-pip installera requirements.txt
-Sätt .venv som kernal för sales_analysis.ipynb
-Använd "Run All" i sales_analysis.ipynb
+Python 3.14.7  
+Skapa ett .venv för projektet  
+pip installera requirements.txt  
+Sätt .venv som kernal för sales_analysis.ipynb  
+Använd "Run All" i sales_analysis.ipynb  
 
 ## Ansvarsområden
 - Skapade Mapp struktur i VS code-Brindha
