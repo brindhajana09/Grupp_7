@@ -7,7 +7,7 @@
 Python 3.14.7  
 Skapa ett .venv för projektet  
 pip installera requirements.txt  
-Sätt .venv som kernal för sales_analysis.ipynb  
+Sätt .venv som kernel för sales_analysis.ipynb  
 Använd "Run All" i sales_analysis.ipynb  
 
 ## Ansvarsområden
